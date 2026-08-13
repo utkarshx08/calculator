@@ -1,61 +1,120 @@
-from tkinter import*
+from tkinter import *
+
 def btnclick(numbers):
     global operator
-    operator=operator + str(numbers)
+    operator = operator + str(numbers)
     text_Input.set(operator)
+
 def btnClearDisplay():
     global operator
-    operator=""
+    operator = ""
     text_Input.set("")
+
 def btnEqualsInput():
     global operator
-    sumup=str(eval(operator))
-    text_Input.set(sumup)
-    operator=sumup
+    try:
+        # replace custom symbols with python operators
+        to_eval = operator.replace("÷", "/").replace("x", "*")
+        sumup = str(eval(to_eval))
+        text_Input.set(sumup)
+        operator = sumup
+    except Exception:
+        text_Input.set("Error")
+        operator = ""
+
 cal = Tk()
 cal.title("Calculator")
+cal.configure(bg="#4b76a8")
+cal.geometry("350x520")
+
 operator = ""
 text_Input = StringVar()
-txtDisplay = Entry(cal,font=('arial', 20,'bold'), textvariable=text_Input, bd=30, insertwidth=4,
-                   bg="cyan", justify='right').grid(columnspan=4) 
-btnclear=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="C",bg="powder blue",command=btnClearDisplay).grid(row=1,column="0")
-BtnM=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="M",bg="powder blue",).grid(row=1,column="1")
-Btnbraket1=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="(",bg="powder blue",command=lambda:btnclick("(")).grid(row=1,column="2")
-Btnbracket2=Button(cal,padx=16,pady=16,bd=8, fg="black",font=(' arial', 20,'bold'),
-            text=")",bg="powder blue",command=lambda:btnclick(")")).grid(row=1,column="3")
-btn7=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="7",bg="powder blue",command=lambda:btnclick(7)).grid(row=2,column="0")
-btn8=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="8", bg="powder blue",command=lambda:btnclick(8)).grid(row=2,column="1")
-btn9=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="9", bg="powder blue",command=lambda:btnclick(9)).grid(row=2,column="2")
-Division=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="/",bg="powder blue",command=lambda:btnclick("/")).grid(row=2,column="3")
-btn6=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="6",bg="powder blue",command=lambda:btnclick(6)).grid(row=3,column="0")
-btn5=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="5",bg="powder blue",command=lambda:btnclick(5)).grid(row=3,column="1")
-btn4=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="4",bg="powder blue",command=lambda:btnclick(4)).grid(row=3,column="2")
-subtraction=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="-",bg="powder blue",command=lambda:btnclick("-")).grid(row=3,column="3")
-btn3=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="3",bg="powder blue",command=lambda:btnclick(3)).grid(row=4,column="0")
-btn2=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="2",bg="powder blue",command=lambda:btnclick(2)).grid(row=4,column="1")
-btn1=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="1",bg="powder blue",command=lambda:btnclick(1)).grid(row=4,column="2")
-Multiplication=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="*",bg="powder blue",command=lambda:btnclick("*")).grid(row=4,column="3")
-Btn0=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="0",bg="powder blue",command=lambda:btnclick(0)).grid(row=5,column="0")
-Dot=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text=".",bg="powder blue",command=lambda:btnclick(".")).grid(row=5,column="1")
-Equal=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="=",bg="powder blue",command=btnEqualsInput).grid(row=5,column="2")
-Addition=Button(cal,padx=16,pady=16,bd=8, fg="black",font=('arial', 20,'bold'),
-            text="+",bg="powder blue",command=lambda:btnclick("+")).grid(row=5,column="3")
+
+# Colors based on the provided image
+bg_color = "#4b76a8"
+num_bg = "#cdd5ec"
+op_bg = "#ffffff"
+c_bg = "#ffca28"
+text_dark = "#2b3a67"
+display_bg = "#6a8eb3"
+display_text = "#ffe345"
+
+# Base Button params
+btn_base = {
+    'font': ('Helvetica', 20, 'bold'),
+    'bd': 0,
+    'fg': text_dark,
+    'relief': FLAT,
+    'highlightthickness': 0
+}
+
+num_params = btn_base.copy()
+num_params.update({'bg': num_bg, 'activebackground': '#b3bede'})
+
+op_params = btn_base.copy()
+op_params.update({'bg': op_bg, 'activebackground': '#e6e6e6'})
+
+clear_params = btn_base.copy()
+clear_params.update({'bg': c_bg, 'activebackground': '#e6b800'})
+
+# Display
+display_frame = Frame(cal, bg=display_bg, bd=0)
+display_frame.grid(row=0, column=0, sticky="nsew", pady=(20, 15), padx=20)
+display_frame.grid_columnconfigure(0, weight=1)
+display_frame.grid_rowconfigure(0, weight=1)
+
+txtDisplay = Entry(display_frame, font=('Helvetica', 40), textvariable=text_Input, bd=0, insertwidth=4,
+                   bg=display_bg, fg=display_text, justify='right', disabledbackground=display_bg, disabledforeground=display_text)
+txtDisplay.grid(row=0, column=0, sticky="nsew", pady=10, padx=10)
+txtDisplay.bind("<Key>", lambda e: "break") # Make it read-only but keep color active
+
+# Button Frame
+button_frame = Frame(cal, bg=bg_color)
+button_frame.grid(row=1, column=0, sticky="nsew", padx=14, pady=(0, 20))
+
+for i in range(5):
+    button_frame.grid_rowconfigure(i, weight=1)
+for i in range(4):
+    button_frame.grid_columnconfigure(i, weight=1)
+
+# Button creation helper
+def create_btn(text, row, col, params, cmd, rowspan=1):
+    btn = Button(button_frame, text=text, command=cmd, **params)
+    btn.grid(row=row, column=col, rowspan=rowspan, sticky="nsew", padx=6, pady=6)
+    return btn
+
+# Row 0
+create_btn("C", 0, 0, clear_params, btnClearDisplay)
+create_btn("%", 0, 1, op_params, lambda: btnclick("%"))
+create_btn("÷", 0, 2, op_params, lambda: btnclick("÷"))
+create_btn("x", 0, 3, op_params, lambda: btnclick("x"))
+
+# Row 1
+create_btn("7", 1, 0, num_params, lambda: btnclick(7))
+create_btn("8", 1, 1, num_params, lambda: btnclick(8))
+create_btn("9", 1, 2, num_params, lambda: btnclick(9))
+create_btn("-", 1, 3, op_params, lambda: btnclick("-"))
+
+# Row 2
+create_btn("4", 2, 0, num_params, lambda: btnclick(4))
+create_btn("5", 2, 1, num_params, lambda: btnclick(5))
+create_btn("6", 2, 2, num_params, lambda: btnclick(6))
+create_btn("+", 2, 3, op_params, lambda: btnclick("+"))
+
+# Row 3
+create_btn("1", 3, 0, num_params, lambda: btnclick(1))
+create_btn("2", 3, 1, num_params, lambda: btnclick(2))
+create_btn("3", 3, 2, num_params, lambda: btnclick(3))
+create_btn("=", 3, 3, op_params, btnEqualsInput, rowspan=2)
+
+# Row 4
+create_btn("0", 4, 0, num_params, lambda: btnclick(0))
+create_btn("00", 4, 1, num_params, lambda: btnclick("00"))
+create_btn(".", 4, 2, num_params, lambda: btnclick("."))
+
+# Main layout config
+cal.grid_rowconfigure(0, weight=0)
+cal.grid_rowconfigure(1, weight=1)
+cal.grid_columnconfigure(0, weight=1)
+
 cal.mainloop()

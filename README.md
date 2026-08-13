@@ -24,19 +24,19 @@ A simple desktop calculator built with **Python** and **Tkinter** for performing
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/utkarshx08/tkinter-calculator.git
+git clone https://github.com/utkarshx08/calculator
 ```
 
 2. Open the project directory:
 
 ```bash
-cd tkinter-calculator
+cd calculator
 ```
 
 3. Run the application:
 
 ```bash
-python calculator.py
+python calculator1.py
 ```
 
 ## Project Structure
